@@ -1,0 +1,57 @@
+//connect 3.3v to AREF
+
+const int xPin = A5;
+const int yPin = A4;
+const int zPin = A3;  
+int led_pin = 13;
+int zVals[12] = {0,0,0,0,0,0,0,0,0,0,0,0}; 
+int counter = 0;
+int avgZ;
+int sumZ = 0;
+
+void setup() {
+  // initialize serial communications at 9600 bps:
+  Serial.begin(9600);
+  pinMode(led_pin, OUTPUT);
+}
+
+void loop() {
+  analogReference(EXTERNAL);    //connect 3.3v to AREF
+  zVals[counter] = analogRead(zPin)-615;
+  sumZ = sumZ - zVals[counter];
+  avgZ = avgZ*12 -zVals[counter];
+  counter++;
+ 
+  sumZ = sumZ+zVals[counter];
+  
+  
+  avgZ = sumZ/12;
+
+  Serial.print("Average Z: ");
+  Serial.print(avgZ);
+ 
+  Serial.print(" X: ");
+  Serial.print(abs(analogRead(xPin)) - 507);
+  Serial.print("\t");
+
+  Serial.print("Y: ");
+  Serial.print(abs(analogRead(yPin)) - 512);
+  Serial.print("\t");
+ 
+  Serial.print("Z: ");
+  Serial.print(abs(analogRead(zPin)) - 615);
+  Serial.println();
+
+  
+  if (counter == 12){
+     counter = 0;
+     avgZ = 0;
+  }
+  if ((analogRead(zPin)-615)> avgZ+30) {
+    digitalWrite(led_pin, HIGH);
+  }
+  else {digitalWrite(led_pin, LOW);
+  }
+  delay(2000);        
+  
+}
