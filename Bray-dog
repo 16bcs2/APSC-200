@@ -1,0 +1,47 @@
+int x, y, z;
+int ledRed = 13;
+int ledGreen = 12;
+void setup()
+{ 
+  pinMode(ledRed, OUTPUT);
+  pinMode(ledGreen, OUTPUT);
+  Serial.begin(9600);      // sets the serial port to 9600
+}
+
+int counter = 0;
+void loop()
+{
+  x = analogRead(0);       // read analog input pin 0
+  y = analogRead(1);       // read analog input pin 1
+  z = analogRead(2);       // read analog input pin 1
+  Serial.print("accelerations are x, y, z: ");
+  Serial.print(x, DEC);    // print the acceleration in the X axis
+  Serial.print(" ");       // prints a space between the numbers
+  Serial.print(y, DEC);    // print the acceleration in the Y axis
+  Serial.print(" ");       // prints a space between the numbers
+  Serial.println(z, DEC);  // print the acceleration in the Z axis
+  counter++;
+  if( z  > 440 ) {
+    digitalWrite(ledRed, HIGH); // turn the LED on
+    delay(1000); // wait for a second
+    digitalWrite(ledRed, LOW); // turn the LED off
+    y = 0;
+    Serial.println("Red ");
+    delay(100);              // wait 100ms to display text
+    delay(1000); // wait for a second
+    //if(counter > 1)        // Optional exit on lit red LED
+    //  exit(0);
+  }
+  if( z >= 414 && z <= 420 ) {
+    digitalWrite(ledGreen, HIGH); // turn the LED on
+    delay(1000); // wait for a second
+    digitalWrite(ledGreen, LOW); // turn the LED off
+    delay(1000); // wait for a second
+    y = 0;
+    Serial.println("Green");
+    delay(100);              // wait 100ms to display text
+    //if(counter > 1)        // Optional exit on lit green LED
+    // exit(0);
+  }
+  delay(100);              // wait 100ms for next reading
+}
